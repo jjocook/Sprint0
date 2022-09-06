@@ -4,11 +4,11 @@
 
 public class MovingStaticSprite : ISprite
 {
-    string sourceFile;
-    int sourceTopLeftCornerCoordinateX;
-    int sourceTopLeftCornerCoordinateY;
-    int sourceWidth;
-    int sourceHeight;
+    public string sourceFile;
+    public int sourceTopLeftCornerCoordinateX;
+    public int sourceTopLeftCornerCoordinateY;
+    public int sourceWidth;
+    public int sourceHeight;
     public void loadContent()
     {
         throw new System.NotImplementedException();
