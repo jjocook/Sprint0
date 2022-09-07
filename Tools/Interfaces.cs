@@ -13,5 +13,5 @@ interface IController{
 interface ISprite
 {
     void update();
-    void loadContent();
+    void initialize();
 }

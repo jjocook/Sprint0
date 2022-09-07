@@ -10,12 +10,11 @@ namespace Sprint0
         private GraphicsDeviceManager _graphics;
         private SpriteBatch spriteBatch;
         private SpriteFont MainFont;
-        private Texture2D genericSprite;
+        private Texture2D luigiSpriteSheet;
         private string creditsString = "Credits\nProgram Made By: John Cook\nSprites from: TBD";
-        private Rectangle luigiSpriteBox = new Rectangle(0, 0, 75, 75);
-        private static int spriteSheetNavigationConstant = 40; // accurate for about the first 4 rows of the luigi sheet
-        private int spriteSheetX = spriteSheetNavigationConstant * 1;
-        private int spriteSheetY = spriteSheetNavigationConstant * 3;
+
+
+        private MovingAnimatedSprite jumpingLuigi = new MovingAnimatedSprite();
 
         public Game1()
         {
@@ -27,6 +26,8 @@ namespace Sprint0
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            MovingAnimatedSprite floatingLuigi = new MovingAnimatedSprite();
+            floatingLuigi.sourceFileDirectory = "./smb3_luigi_sheet";
 
             base.Initialize();
         }
@@ -36,8 +37,12 @@ namespace Sprint0
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             MainFont = Content.Load<SpriteFont>("./MainText");
-            genericSprite = Content.Load<Texture2D>("./smb3_luigi_sheet");
-            
+            luigiSpriteSheet = Content.Load<Texture2D>(jumpingLuigi.sourceFileDirectory);
+            jumpingLuigi.setFrame1Rectangle(135, 154, 16, 27);
+            jumpingLuigi.setFrame2Rectangle(95, 155, 16, 26);
+            jumpingLuigi.setFrame2Rectangle(55, 155, 16, 26);
+            jumpingLuigi.setPositionRectangle(155,155,16,26);
+
 
             // TODO: use this.Content to load your game content here
         }
