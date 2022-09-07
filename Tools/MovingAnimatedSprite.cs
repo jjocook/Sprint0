@@ -1,6 +1,8 @@
 ﻿/*
  *Implementation of ISprite for mobile animated sprites
  */
+using Microsoft.Xna.Framework.Graphics;
+
 public class MovingAnimatedSprite : ISprite
 {
     /*
@@ -44,6 +46,12 @@ public class MovingAnimatedSprite : ISprite
     private sourceFrame1 sourceFrame1Data { get; set; }
     private sourceFrame2 sourceFrame2Data { get; set; }
     private sourceFrame3 sourceFrame3Data { get; set; }
+    /*
+     tool variables for drawing via update call
+     */
+    private SpriteBatch spriteBatch;
+    private SpriteFont MainFont;
+    private Texture2D genericSprite;
 
     public void loadContent()
     {
@@ -52,6 +60,6 @@ public class MovingAnimatedSprite : ISprite
 
     public void update()
     {
-        throw new System.NotImplementedException();
+        spriteBatch.Draw(genericSprite, luigiSpriteBox, new Rectangle(spriteSheetX, spriteSheetY, 32, 32), Color.White);
     }
 }
