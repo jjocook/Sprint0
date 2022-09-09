@@ -1,7 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-
+using System;
+using System.Collections.Generic;
 
 namespace Sprint0
 {
@@ -12,6 +13,10 @@ namespace Sprint0
         private SpriteFont MainFont;
         private Texture2D luigiSpriteSheet;
         private string creditsString = "Credits\nProgram Made By: John Cook\nSprites from: TBD";
+        int time1 = new DateTime().Millisecond;
+        int time2 = new DateTime().Millisecond;
+        int MillisecondPerFrame = 500;
+        bool frameTick = false;
 
 
         private MovingAnimatedSprite jumpingLuigi = new MovingAnimatedSprite();
@@ -26,8 +31,7 @@ namespace Sprint0
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            MovingAnimatedSprite floatingLuigi = new MovingAnimatedSprite();
-            floatingLuigi.sourceFileDirectory = "./smb3_luigi_sheet";
+            
 
             base.Initialize();
         }
@@ -35,9 +39,12 @@ namespace Sprint0
         protected override void LoadContent()
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
+            MovingAnimatedSprite floatingLuigi = new MovingAnimatedSprite();
+            floatingLuigi.initialize();
+            floatingLuigi.setSourceDirectory("./smb3_luigi_sheet");
 
             MainFont = Content.Load<SpriteFont>("./MainText");
-            luigiSpriteSheet = Content.Load<Texture2D>(jumpingLuigi.sourceFileDirectory);
+            luigiSpriteSheet = Content.Load<Texture2D>("./smb3_luigi_sheet");
             jumpingLuigi.setFrame1Rectangle(135, 154, 16, 27);
             jumpingLuigi.setFrame2Rectangle(95, 155, 16, 26);
             jumpingLuigi.setFrame2Rectangle(55, 155, 16, 26);
@@ -52,7 +59,25 @@ namespace Sprint0
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
+            //Time interval calculation
+            time2 = gameTime.ElapsedGameTime.Milliseconds;
+
+
             // TODO: Add your update logic here
+
+            //Frame bound updates
+            if (!frameTick && time2 > MillisecondPerFrame)
+            {
+                jumpingLuigi.update();
+
+                frameTick = true;
+            }
+            if (frameTick && time2 < MillisecondPerFrame)
+            {
+                jumpingLuigi.update();
+                frameTick = false;
+            }
+            
 
             base.Update(gameTime);
         }
@@ -64,7 +89,7 @@ namespace Sprint0
             spriteBatch.Begin();
 
             spriteBatch.DrawString(MainFont, creditsString, new Vector2(200, 400), Color.Black);
-            spriteBatch.Draw(genericSprite, luigiSpriteBox, new Rectangle(spriteSheetX, spriteSheetY, 32, 32), Color.White);
+            spriteBatch.Draw(luigiSpriteSheet, jumpingLuigi.getPositionRectangle(), jumpingLuigi.getSourceRectangle(), Color.White);
 
             spriteBatch.End();
 

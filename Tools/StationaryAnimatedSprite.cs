@@ -8,7 +8,7 @@ public class SationaryAnimatedSprite : ISprite
     public int sourceTopLeftCornerCoordinateY;
     public int sourceWidth;
     public int sourceHeight;
-    public void loadContent()
+    public void initialize()
     {
         throw new System.NotImplementedException();
     }

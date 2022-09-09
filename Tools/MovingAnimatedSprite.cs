@@ -42,36 +42,36 @@ public class MovingAnimatedSprite : ISprite
     /*
      Frame Counter
      */
-    private int currentFrame = 0;
+    private static int currentFrame = 0;
 
 
     public void initialize()
     {
-        sourceFileDirectory="";
-        sourceX1=0;
-        sourceY1 = 0;
-        sourceWidth1 = 0;
-        sourceHeight1 = 0;
+        this.sourceFileDirectory="";
+        this.sourceX1=0;
+        this.sourceY1 = 0;
+        this.sourceWidth1 = 0;
+        this.sourceHeight1 = 0;
 
-        sourceX2 = 0;
-        sourceY2 = 0;
-        sourceWidth2 = 0;
-        sourceHeight2 = 0;
+        this.sourceX2 = 0;
+        this.sourceY2 = 0;
+        this.sourceWidth2 = 0;
+        this.sourceHeight2 = 0;
 
-        sourceX3 = 0;
-        sourceY3 = 0;
-        sourceWidth3 = 0;
-        sourceHeight3 = 0;
+        this.sourceX3 = 0;
+        this.sourceY3 = 0;
+        this.sourceWidth3 = 0;
+        this.sourceHeight3 = 0;
 
         /*
          * Data for where to place sprite in window
          */
 
 
-        positionX = 0;
-        positionY = 0;
-        width = 0;
-        height = 0;
+        this.positionX = 0;
+        this.positionY = 0;
+        this.width = 0;
+        this.height = 0;
     }
 
     public void update()
@@ -102,32 +102,40 @@ public class MovingAnimatedSprite : ISprite
 
     public void setPositionRectangle(int x, int y, int w, int h)
     {
-        positionX = x;
-        positionY = y;
-        width = w;
-        height = h;
+        this.positionX = x;
+        this.positionY = y;
+        this.width = w;
+        this.height = h;
     }
 
     public void setFrame1Rectangle(int x, int y, int w, int h)
     {
-        sourceX1 = x;
-        sourceY1 = y;
-        sourceWidth1 = w;
-        sourceHeight1 = h;
+        this.sourceX1 = x;
+        this.sourceY1 = y;
+        this.sourceWidth1 = w;
+        this.sourceHeight1 = h;
     }
     public void setFrame2Rectangle(int x, int y, int w, int h)
     {
-        sourceX2 = x;
-        sourceY2 = y;
-        sourceWidth2 = w;
-        sourceHeight2 = h;
+        this.sourceX2 = x;
+        this.sourceY2 = y;
+        this.sourceWidth2 = w;
+        this.sourceHeight2 = h;
     }
     public void setFrame3Rectangle(int x, int y, int w, int h)
     {
-        sourceX3 = x;
-        sourceY3 = y;
-        sourceWidth3 = w;
-        sourceHeight3 = h;
+        this.sourceX3 = x;
+        this.sourceY3 = y;
+        this.sourceWidth3 = w;
+        this.sourceHeight3 = h;
+    }
+    public void setSourceDirectory(string directory)
+    {
+        this.sourceFileDirectory = directory;
+    }
+    public string getSourceDirectory()
+    {
+        return this.sourceFileDirectory;
     }
 
 }
