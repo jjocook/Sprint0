@@ -11,15 +11,21 @@ namespace Sprint0
         private GraphicsDeviceManager _graphics;
         private SpriteBatch spriteBatch;
         private SpriteFont MainFont;
-        private Texture2D luigiSpriteSheet;
-        private string creditsString = "Credits\nProgram Made By: John Cook\nSprites from: TBD";
-        int time1 = new DateTime().Millisecond;
-        int time2 = new DateTime().Millisecond;
-        int MillisecondPerFrame = 500;
-        bool frameTick = false;
+        private string creditsString = "Credits\nProgram Made By: John Cook\nSprites from: https://www.mariomayhem.com/downloads/sprites/super_mario_bros_3_sprites.php";
 
+        /*Declaration of controllers*/
+        private KeyboardController keyboardController = new KeyboardController();
+        private MouseController mouseController = new MouseController();    
 
+        /*Declaration of needed sprites*/
         private MovingAnimatedSprite jumpingLuigi = new MovingAnimatedSprite();
+        private StationaryAnimatedSprite animatedLuigi = new StationaryAnimatedSprite();
+        private MovingStaticSprite floatingLuigi = new MovingStaticSprite();
+        private StationaryStaticSprite standingLuigi = new StationaryStaticSprite();
+        private TextSprite textSprite = new TextSprite();
+
+
+        private HashSet<ISprite> spritesToDraw = new HashSet<ISprite>();
 
         public Game1()
         {
@@ -39,16 +45,28 @@ namespace Sprint0
         protected override void LoadContent()
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            MovingAnimatedSprite floatingLuigi = new MovingAnimatedSprite();
-            floatingLuigi.initialize();
-            floatingLuigi.setSourceDirectory("./smb3_luigi_sheet");
 
-            MainFont = Content.Load<SpriteFont>("./MainText");
-            luigiSpriteSheet = Content.Load<Texture2D>("./smb3_luigi_sheet");
+            textSprite.setFont(Content.Load<SpriteFont>("./MainText"));
+
+            jumpingLuigi.loadSpriteSheet(Content.Load<Texture2D>("./smb3_luigi_sheet"));
             jumpingLuigi.setFrame1Rectangle(135, 154, 16, 27);
             jumpingLuigi.setFrame2Rectangle(95, 155, 16, 26);
-            jumpingLuigi.setFrame2Rectangle(55, 155, 16, 26);
-            jumpingLuigi.setPositionRectangle(155,155,16,26);
+            jumpingLuigi.setFrame3Rectangle(55, 155, 16, 26);
+            jumpingLuigi.setPositionRectangle(400,200,16,27);
+
+            animatedLuigi.loadSpriteSheet(Content.Load<Texture2D>("./smb3_luigi_sheet"));
+            animatedLuigi.setFrame1Rectangle(166, 474, 34, 27);
+            animatedLuigi.setFrame2Rectangle(355, 394, 16, 28);
+            animatedLuigi.setFrame3Rectangle(206, 474, 34, 27);
+            animatedLuigi.setPositionRectangle(400, 200, 16, 28);
+
+            floatingLuigi.loadSpriteSheet(Content.Load<Texture2D>("./smb3_luigi_sheet"));
+            floatingLuigi.setFrameRectangle(291, 474, 23, 28);
+            floatingLuigi.setPositionRectangle(400, 200, 16, 28);
+
+            standingLuigi.loadSpriteSheet(Content.Load<Texture2D>("./smb3_luigi_sheet"));
+            standingLuigi.setFrameRectangle(15, 194, 16, 27);
+            standingLuigi.setPositionRectangle(400, 200, 16, 27);
 
 
             // TODO: use this.Content to load your game content here
@@ -56,28 +74,83 @@ namespace Sprint0
 
         protected override void Update(GameTime gameTime) //Update game state information here
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
-
-            //Time interval calculation
-            time2 = gameTime.ElapsedGameTime.Milliseconds;
-
+            
 
             // TODO: Add your update logic here
 
-            //Frame bound updates
-            if (!frameTick && time2 > MillisecondPerFrame)
-            {
-                jumpingLuigi.update();
+            keyboardController.update();
+            mouseController.update();
 
-                frameTick = true;
-            }
-            if (frameTick && time2 < MillisecondPerFrame)
+            if (keyboardController.lastInputTime >= mouseController.lastInputTime)
             {
-                jumpingLuigi.update();
-                frameTick = false;
+
+                switch (keyboardController.getLastPressed())
+                {
+                    case 4:
+                        jumpingLuigi.updateCurrentFrame(gameTime);
+                        spritesToDraw.Add(jumpingLuigi);
+                        break;
+
+                    case 3:
+                        floatingLuigi.updateCurrentFrame(gameTime);
+                        spritesToDraw.Add(floatingLuigi);
+                        break;
+
+                    case 2:
+                        animatedLuigi.updateCurrentFrame(gameTime);
+                        spritesToDraw.Add(animatedLuigi);
+                        break;
+
+                    case 1:
+                        standingLuigi.updateCurrentFrame(gameTime);
+                        spritesToDraw.Add(standingLuigi);
+                        break;
+
+                    case 0:
+                        Exit();
+                        break;
+                    default:
+                        standingLuigi.updateCurrentFrame(gameTime);
+                        spritesToDraw.Add(standingLuigi);
+                        break;
+                }
+
             }
-            
+            else
+            {
+
+                switch (mouseController.getLastPressed())
+                {
+                    case 4:
+                        jumpingLuigi.updateCurrentFrame(gameTime);
+                        spritesToDraw.Add(jumpingLuigi);
+
+                        break;
+
+                    case 3:
+                        floatingLuigi.updateCurrentFrame(gameTime);
+                        spritesToDraw.Add(floatingLuigi);
+                        break;
+
+                    case 2:
+                        animatedLuigi.updateCurrentFrame(gameTime);
+                        spritesToDraw.Add(animatedLuigi);
+                        break;
+
+                    case 1:
+                        standingLuigi.updateCurrentFrame(gameTime);
+                        spritesToDraw.Add(standingLuigi);
+                        break;
+
+                    case 0:
+                        Exit();
+                        break;
+                    default:
+                        standingLuigi.updateCurrentFrame(gameTime);
+                        spritesToDraw.Add(standingLuigi);
+                        break;
+                }
+            }
 
             base.Update(gameTime);
         }
@@ -88,8 +161,16 @@ namespace Sprint0
 
             spriteBatch.Begin();
 
-            spriteBatch.DrawString(MainFont, creditsString, new Vector2(200, 400), Color.Black);
-            spriteBatch.Draw(luigiSpriteSheet, jumpingLuigi.getPositionRectangle(), jumpingLuigi.getSourceRectangle(), Color.White);
+            textSprite.setText(creditsString);
+            textSprite.setPosition(100, 400);
+            spritesToDraw.Add(textSprite);
+
+            foreach (var item in spritesToDraw)
+            {
+                item.draw(spriteBatch);
+            }
+
+            spritesToDraw.Clear();
 
             spriteBatch.End();
 

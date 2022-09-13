@@ -3,10 +3,17 @@
  */
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+using System;
+using System.Diagnostics;
 using System.Reflection;
 
 public class MovingAnimatedSprite : ISprite
 {
+    /*
+     Debug switch
+     */
+    private bool DEBUG = true;
     /*
      * Data for source of sprite information for each frame to animate
      */
@@ -42,7 +49,10 @@ public class MovingAnimatedSprite : ISprite
     /*
      Frame Counter
      */
-    private static int currentFrame = 0;
+    private int currentFrame = 0;
+    private double timeFlag;
+
+    Texture2D spriteSheet;
 
 
     public void initialize()
@@ -76,17 +86,32 @@ public class MovingAnimatedSprite : ISprite
 
     public void update()
     {
-        currentFrame = (currentFrame + 1) % 3;
         
+    }
+
+    public void loadSpriteSheet(Texture2D newSpriteSheet)
+    {
+        spriteSheet = newSpriteSheet;
+    }
+    public void draw(SpriteBatch spriteBatch)
+    {
+        spriteBatch.Draw(spriteSheet, getPositionRectangle(), getSourceRectangle(), Color.White);
     }
 
     public Rectangle getPositionRectangle()
     {
-        return new Rectangle(positionX, positionY+currentFrame, width, height);
+        
+            return new Rectangle(positionX+currentFrame*10, positionY, width, height);
+
     }
 
     public Rectangle getSourceRectangle()
     {
+        if (DEBUG)
+        {
+            Debug.WriteLine("get source rectangle called. Current Frame: " + currentFrame);
+        }
+
         switch (currentFrame)
         {
             case 0: return new Rectangle(sourceX1, sourceY1, sourceWidth1, sourceHeight1);
@@ -135,7 +160,36 @@ public class MovingAnimatedSprite : ISprite
     }
     public string getSourceDirectory()
     {
+        if (DEBUG)
+        {
+            Debug.WriteLine("getSourceDirectory called on moving animated sprite, Directory returned: " + this.sourceFileDirectory);
+        }
+
         return this.sourceFileDirectory;
+    }
+
+    public void updateCurrentFrame(GameTime gameTime)
+    {
+        double currentTime = gameTime.TotalGameTime.TotalMilliseconds;
+        if (DEBUG)
+        {
+            Debug.WriteLine("UpdateCurrentFrame Called. Current Frame Prior to Check: " + currentFrame);
+            Debug.WriteLine("Time Flag Prior to Check: " + timeFlag);
+            Debug.WriteLine("gameTime Prior to Check: " + currentTime);
+
+        }
+        
+        if (currentTime > timeFlag + 300)
+        {
+            currentFrame = (currentFrame + 1) % 3;
+            timeFlag = currentTime;
+        }
+        if (DEBUG)
+        {
+            Debug.WriteLine("Current Frame after Check: " + currentFrame);
+            Debug.WriteLine("Time Flag after Check: " + timeFlag);
+            Debug.WriteLine("gameTime after Check: " + gameTime.TotalGameTime.TotalMilliseconds);
+        }
     }
 
 }
